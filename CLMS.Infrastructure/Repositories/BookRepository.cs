@@ -18,8 +18,10 @@ namespace CLMS.Infrastructure.Repositories {
             IQueryable<Book> query = _context.Books;
 
             if (options != null) {
-                query = query.Take(options.PageSize)
-                             .Skip(options.Page * options.PageSize);
+                if (options.PageSize.HasValue && options.Page.HasValue) {
+                    query = query.Take(options.PageSize.Value)
+                                 .Skip(options.Page.Value * options.PageSize.Value);
+                }
 
                 if (options.BookCopiesRetrievalOptions?.BookCopiesRetrieval != BookCopiesRetrieval.None) {
                     query = query.Include(x => ApplyOptions(x.Copies, options.BookCopiesRetrievalOptions));
@@ -66,8 +68,11 @@ namespace CLMS.Infrastructure.Repositories {
 
         private static IEnumerable<BookCopy> ApplyOptions (IEnumerable<BookCopy> copies, PaginatedBookCopiesRetrievalOptions? options) {
             if (options != null) {
-                copies = ApplyOptions(copies, options as BookCopiesRetrievalOptions)
-                    .Take(options.PageSize).Skip(options.Page * options.PageSize);
+                copies = ApplyOptions(copies, options as BookCopiesRetrievalOptions);
+
+                if (options.PageSize.HasValue && options.Page.HasValue) {
+                    copies = copies.Take(options.PageSize.Value).Skip(options.Page.Value * options.PageSize.Value);
+                }
             }
 
             return copies;

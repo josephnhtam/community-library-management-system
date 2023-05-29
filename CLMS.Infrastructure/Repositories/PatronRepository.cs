@@ -18,8 +18,10 @@ namespace CLMS.Infrastructure.Repositories {
             IQueryable<Patron> patrons = _context.Patrons;
 
             if (options != null) {
-                patrons = patrons.Take(options.PageSize)
-                                 .Skip(options.Page * options.PageSize);
+                if (options.PageSize.HasValue && options.Page.HasValue) {
+                    patrons = patrons.Take(options.PageSize.Value)
+                                     .Skip(options.Page.Value * options.PageSize.Value);
+                }
 
                 if (options.BookDonationsRetrievalOptions?.BookDonationsRetrieval != BookDonationsRetrieval.None) {
                     patrons = patrons.Include(x => ApplyOptions(x.BookDonations, options.BookDonationsRetrievalOptions));
@@ -58,8 +60,11 @@ namespace CLMS.Infrastructure.Repositories {
 
         private static IEnumerable<BookLoan> ApplyOptions (IEnumerable<BookLoan> loans, PaginatedBookLoansRetrievalOptions? options) {
             if (options != null) {
-                loans = ApplyOptions(loans, options as BookLoansRetrievalOptions)
-                    .Take(options.PageSize).Skip(options.Page * options.PageSize);
+                loans = ApplyOptions(loans, options as BookLoansRetrievalOptions);
+
+                if (options.PageSize.HasValue && options.Page.HasValue) {
+                    loans = loans.Take(options.PageSize.Value).Skip(options.Page.Value * options.PageSize.Value);
+                }
             }
 
             return loans;
@@ -80,8 +85,11 @@ namespace CLMS.Infrastructure.Repositories {
 
         private static IEnumerable<BookDonation> ApplyOptions (IEnumerable<BookDonation> donations, PaginatedBookDonationsRetrievalOptions? options) {
             if (options != null) {
-                donations = ApplyOptions(donations, options as BookDonationsRetrievalOptions)
-                    .Take(options.PageSize).Skip(options.Page * options.PageSize);
+                donations = ApplyOptions(donations, options as BookDonationsRetrievalOptions);
+
+                if (options.PageSize.HasValue && options.Page.HasValue) {
+                    donations = donations.Take(options.PageSize.Value).Skip(options.Page.Value * options.PageSize.Value);
+                }
             }
 
             return donations;

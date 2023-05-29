@@ -10,14 +10,14 @@
     }
 
     public class PatronRetrievalOptions {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
+        public int? Page { get; private set; }
+        public int? PageSize { get; private set; }
         public BookLoansRetrievalOptions? BookLoansRetrievalOptions { get; private set; }
         public BookDonationsRetrievalOptions? BookDonationsRetrievalOptions { get; private set; }
 
         public PatronRetrievalOptions (
-            int page,
-            int pageSize,
+            int? page,
+            int? pageSize,
             BookLoansRetrievalOptions? bookLoansRetrievalOptions = null,
             BookDonationsRetrievalOptions? bookDonationsRetrievalOptions = null) {
             Page = page;
@@ -43,15 +43,15 @@
     }
 
     public class PaginatedBookDonationsRetrievalOptions : BookDonationsRetrievalOptions {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
+        public int? Page { get; private set; }
+        public int? PageSize { get; private set; }
 
-        public PaginatedBookDonationsRetrievalOptions (int page, int pageSize, BookDonationsRetrieval BookDonationsRetrieval) : base(BookDonationsRetrieval) {
+        public PaginatedBookDonationsRetrievalOptions (int? page, int? pageSize, BookDonationsRetrieval BookDonationsRetrieval) : base(BookDonationsRetrieval) {
             Page = page;
             PageSize = pageSize;
         }
 
-        public PaginatedBookDonationsRetrievalOptions (int page, int pageSize, IReadOnlyList<Guid> BookDonationIds) : base(BookDonationIds) {
+        public PaginatedBookDonationsRetrievalOptions (int? page, int? pageSize, IReadOnlyList<Guid> BookDonationIds) : base(BookDonationIds) {
             Page = page;
             PageSize = pageSize;
         }
@@ -79,15 +79,15 @@
     }
 
     public class PaginatedBookLoansRetrievalOptions : BookLoansRetrievalOptions {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
+        public int? Page { get; private set; }
+        public int? PageSize { get; private set; }
 
-        public PaginatedBookLoansRetrievalOptions (int page, int pageSize, BookLoansRetrieval BookLoansRetrieval) : base(BookLoansRetrieval) {
+        public PaginatedBookLoansRetrievalOptions (int? page, int? pageSize, BookLoansRetrieval BookLoansRetrieval) : base(BookLoansRetrieval) {
             Page = page;
             PageSize = pageSize;
         }
 
-        public PaginatedBookLoansRetrievalOptions (int page, int pageSize, IReadOnlyList<Guid> BookLoanIds) : base(BookLoanIds) {
+        public PaginatedBookLoansRetrievalOptions (int? page, int? pageSize, IReadOnlyList<Guid> BookLoanIds) : base(BookLoanIds) {
             Page = page;
             PageSize = pageSize;
         }

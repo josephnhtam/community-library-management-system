@@ -9,11 +9,11 @@
     }
 
     public class BookRetrievalOptions {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
+        public int? Page { get; private set; }
+        public int? PageSize { get; private set; }
         public BookCopiesRetrievalOptions? BookCopiesRetrievalOptions { get; private set; }
 
-        public BookRetrievalOptions (int page, int pageSize, BookCopiesRetrievalOptions? bookCopiesRetrievalOptions = null) {
+        public BookRetrievalOptions (int? page, int? pageSize, BookCopiesRetrievalOptions? bookCopiesRetrievalOptions = null) {
             Page = page;
             PageSize = pageSize;
             BookCopiesRetrievalOptions = bookCopiesRetrievalOptions;
@@ -36,15 +36,15 @@
     }
 
     public class PaginatedBookCopiesRetrievalOptions : BookCopiesRetrievalOptions {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
+        public int? Page { get; private set; }
+        public int? PageSize { get; private set; }
 
-        public PaginatedBookCopiesRetrievalOptions (int page, int pageSize, BookCopiesRetrieval bookCopiesRetrieval) : base(bookCopiesRetrieval) {
+        public PaginatedBookCopiesRetrievalOptions (int? page, int? pageSize, BookCopiesRetrieval bookCopiesRetrieval) : base(bookCopiesRetrieval) {
             Page = page;
             PageSize = pageSize;
         }
 
-        public PaginatedBookCopiesRetrievalOptions (int page, int pageSize, IReadOnlyList<Guid> bookCopyIds) : base(bookCopyIds) {
+        public PaginatedBookCopiesRetrievalOptions (int? page, int? pageSize, IReadOnlyList<Guid> bookCopyIds) : base(bookCopyIds) {
             Page = page;
             PageSize = pageSize;
         }

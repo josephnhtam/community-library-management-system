@@ -1,5 +1,6 @@
 ﻿using CLMS.Domain.Aggregates.AuthorAggregate;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CLMS.Infrastructure.Repositories {
     public class AuthorRepository : IAuthorRepository {
@@ -21,9 +22,9 @@ namespace CLMS.Infrastructure.Repositories {
         public async Task<IEnumerable<Author>> GetAuthorsAsync (AuthorRetrievalOptions? options = null) {
             IQueryable<Author> query = _context.Authors;
 
-            if (options != null) {
-                query = query.Take(options.PageSize)
-                             .Skip(options.Page * options.PageSize);
+            if (options != null && options.PageSize.HasValue && options.Page.HasValue) {
+                query = query.Take(options.PageSize.Value)
+                             .Skip(options.Page.Value * options.PageSize.Value);
             }
 
             return await query.ToListAsync();

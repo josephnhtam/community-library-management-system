@@ -7,10 +7,10 @@
     }
 
     public class AuthorRetrievalOptions {
-        public int Page { get; private set; }
-        public int PageSize { get; private set; }
+        public int? Page { get; private set; }
+        public int? PageSize { get; private set; }
 
-        public AuthorRetrievalOptions (int page, int pageSize) {
+        public AuthorRetrievalOptions (int? page, int? pageSize) {
             Page = page;
             PageSize = pageSize;
         }
