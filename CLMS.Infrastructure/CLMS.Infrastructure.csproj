@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks\Infrastructure.EFCore\Infrastructure.EFCore.csproj" />
     <ProjectReference Include="..\CLMS.Application\CLMS.Application.csproj" />
-    <ProjectReference Include="..\Infrastructure.EFCore\Infrastructure.EFCore.csproj" />
   </ItemGroup>
 
 </Project>
