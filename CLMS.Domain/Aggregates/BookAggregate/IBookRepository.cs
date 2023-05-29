@@ -52,6 +52,7 @@
 
     public enum BookCopiesRetrieval {
         None,
+        All,
         Available,
         NotAvailable,
         SpecificIds

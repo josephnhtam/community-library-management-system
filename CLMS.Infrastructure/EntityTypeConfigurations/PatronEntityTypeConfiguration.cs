@@ -24,8 +24,6 @@ namespace CLMS.Infrastructure.EntityTypeConfigurations {
 
             builder.Property(x => x.ConcurrentBookLoansCount).IsRequired();
 
-            builder.Property(x => x.MaxConcurrentBookLoansCount);
-
             var addressBuilder = builder.OwnsOne(x => x.Address);
             addressBuilder.Property(x => x.Street).IsRequired();
             addressBuilder.Property(x => x.City).IsRequired();

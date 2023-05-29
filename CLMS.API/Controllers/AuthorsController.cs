@@ -16,8 +16,8 @@ namespace CLMS.API.Controllers {
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create (AddAuthorRequest request) {
-            var author = await _mediator.Send(new CreateAuthorCommand(request.Name, request.Description));
+        public async Task<ActionResult<Guid>> Add (AddAuthorRequest request) {
+            var author = await _mediator.Send(new AddAuthorCommand(request.Name, request.Description));
             return Ok(author.Id);
         }
 
