@@ -1,18 +1,11 @@
 ﻿using Application.Contracts;
-using CLMS.Domain.Aggregates.AuthorAggregate;
+using CLMS.Domain.Aggregates.BookAggregate;
 
 namespace CLMS.Application.Commands.Books {
-    public class AddBookCommand : ICommand<Author> {
-        public string Title { get; init; }
-        public string Description { get; init; }
-        public DateTimeOffset PublicationDate { get; init; }
-        public List<Guid> Authors { get; init; }
-
-        public AddBookCommand (string title, string description, DateTimeOffset publicationDate, List<Guid> authors) {
-            Title = title;
-            Description = description;
-            PublicationDate = publicationDate;
-            Authors = authors;
-        }
+    public class AddBookCommand : ICommand<Book> {
+        public string Title { get; init; } = default!;
+        public string Description { get; init; } = default!;
+        public DateTimeOffset PublicationDate { get; init; } = default!;
+        public List<Guid> Authors { get; init; } = default!;
     }
 }

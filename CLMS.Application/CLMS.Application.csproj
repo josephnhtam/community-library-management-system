@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CommandHandlers\Authors\" />
-    <Folder Include="CommandHandlers\Books\" />
+    <Folder Include="QueryHandlers\Patrons\" />
   </ItemGroup>
 
 </Project>

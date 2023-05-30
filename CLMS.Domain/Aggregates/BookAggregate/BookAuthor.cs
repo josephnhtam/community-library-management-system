@@ -2,14 +2,14 @@
 
 namespace CLMS.Domain.Aggregates.BookAggregate {
     public class BookAuthor : DomainEntity {
-        public int Id { get; set; }
-        public Book Book { get; private set; }
-        public Guid AuthorId { get; private set; }
+        public int Id { get; set; } = default!;
+        public Guid BookId { get; private set; } = default!;
+        public Guid AuthorId { get; private set; } = default!;
 
         private BookAuthor () { }
 
-        public BookAuthor (Book book, Guid authorId) {
-            Book = book;
+        public BookAuthor (Guid bookId, Guid authorId) {
+            BookId = bookId;
             AuthorId = authorId;
         }
 

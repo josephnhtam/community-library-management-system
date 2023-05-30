@@ -20,31 +20,27 @@ namespace CLMS.Application.CommandHandlers.Patrons {
         }
 
         public async Task<BookLoan> Handle (BorrowBookCommand request, CancellationToken cancellationToken) {
-            BookLoan? bookLoan = null;
+            var patron = await _patronRepository.GetPatronByIdAsync(request.PatronId);
 
-            await _unitOfWork.ExecuteOptimisticUpdateAsync(async () => {
-                var patron = await _patronRepository.GetPatronByIdAsync(request.PatronId);
+            if (patron == null) {
+                throw new BusinessRuleValidationException("Patron not found");
+            }
 
-                if (patron == null) {
-                    throw new BusinessRuleValidationException("Patron not found");
-                }
+            int? maxConcurrentBookLoansCount = null;
+            switch (patron.Type) {
+                case PatronType.BookDonor:
+                    maxConcurrentBookLoansCount = _bookLoanPolicy.DonorMaxConcurrentBookLoansCount;
+                    break;
+                case PatronType.Customer:
+                    maxConcurrentBookLoansCount = _bookLoanPolicy.CustomerMaxConcurrentBookLoansCount;
+                    break;
+            }
 
-                int? maxConcurrentBookLoansCount = null;
-                switch (patron.Type) {
-                    case PatronType.BookDonor:
-                        maxConcurrentBookLoansCount = _bookLoanPolicy.DonorMaxConcurrentBookLoansCount;
-                        break;
-                    case PatronType.Customer:
-                        maxConcurrentBookLoansCount = _bookLoanPolicy.CustomerMaxConcurrentBookLoansCount;
-                        break;
-                }
+            var bookLoan = patron.BorrowBook(request.BookCopyId, request.Date, request.DueDate, maxConcurrentBookLoansCount);
 
-                bookLoan = patron.BorrowBook(request.BookCopyId, request.Date, request.DueDate, maxConcurrentBookLoansCount);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                await _unitOfWork.CommitAsync(cancellationToken);
-            });
-
-            return bookLoan!;
+            return bookLoan;
         }
 
     }

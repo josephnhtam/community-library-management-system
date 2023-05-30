@@ -16,21 +16,17 @@ namespace CLMS.Application.CommandHandlers.Patrons {
         }
 
         public async Task<BookDonation> Handle (DonateBookCommand request, CancellationToken cancellationToken) {
-            BookDonation? donation = null;
+            var patron = await _patronRepository.GetPatronByIdAsync(request.PatronId);
 
-            await _unitOfWork.ExecuteOptimisticUpdateAsync(async () => {
-                var patron = await _patronRepository.GetPatronByIdAsync(request.PatronId);
+            if (patron == null) {
+                throw new BusinessRuleValidationException("Patron not found");
+            }
 
-                if (patron == null) {
-                    throw new BusinessRuleValidationException("Patron not found");
-                }
+            var donation = patron.DonateBook(request.BookId, request.Date);
 
-                donation = patron.DonateBook(request.BookId, request.Date);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                await _unitOfWork.CommitAsync(cancellationToken);
-            });
-
-            return donation!;
+            return donation;
         }
 
     }

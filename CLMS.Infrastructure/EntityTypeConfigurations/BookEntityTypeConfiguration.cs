@@ -28,7 +28,8 @@ namespace CLMS.Infrastructure.EntityTypeConfigurations {
                    .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasMany(x => x.Copies)
-                   .WithOne(x => x.Book)
+                   .WithOne()
+                   .HasForeignKey(x => x.BookId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
@@ -37,7 +38,8 @@ namespace CLMS.Infrastructure.EntityTypeConfigurations {
                    .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasMany(x => x.Authors)
-                   .WithOne(x => x.Book)
+                   .WithOne()
+                   .HasForeignKey(x => x.BookId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
         }

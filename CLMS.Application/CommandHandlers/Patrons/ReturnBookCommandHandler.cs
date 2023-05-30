@@ -17,30 +17,26 @@ namespace CLMS.Application.CommandHandlers.Patrons {
         }
 
         public async Task<BookLoan> Handle (ReturnBookCommand request, CancellationToken cancellationToken) {
-            BookLoan? bookLoan = null;
+            var patron = await _patronRepository.GetPatronByIdAsync(
+                request.PatronId,
+                new PaginatedBookLoansRetrievalOptions(null, null, new List<Guid>() { request.BookLoanId })
+            );
 
-            await _unitOfWork.ExecuteOptimisticUpdateAsync(async () => {
-                var patron = await _patronRepository.GetPatronByIdAsync(
-                    request.PatronId,
-                    new PaginatedBookLoansRetrievalOptions(null, null, new List<Guid>() { request.BookLoanId })
-                );
+            if (patron == null) {
+                throw new BusinessRuleValidationException("Patron not found");
+            }
 
-                if (patron == null) {
-                    throw new BusinessRuleValidationException("Patron not found");
-                }
+            var bookLoan = patron.BookLoans.FirstOrDefault(x => x.Id == request.BookLoanId);
 
-                bookLoan = patron.BookLoans.FirstOrDefault(x => x.Id == request.BookLoanId);
+            if (bookLoan == null) {
+                throw new BusinessRuleValidationException("Book loan not found");
+            }
 
-                if (bookLoan == null) {
-                    throw new BusinessRuleValidationException("Book loan not found");
-                }
+            patron.ReturnBook(bookLoan, request.Date);
 
-                patron.ReturnBook(bookLoan, request.Date);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                await _unitOfWork.CommitAsync(cancellationToken);
-            });
-
-            return bookLoan!;
+            return bookLoan;
         }
 
     }

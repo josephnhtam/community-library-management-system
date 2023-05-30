@@ -5,27 +5,27 @@ namespace CLMS.Domain.Aggregates.BookAggregate {
 
         public int Version { get; private set; } = default!;
         public Guid Id { get; private set; } = default!;
-        public Book Book { get; private set; } = default!;
+        public Guid BookId { get; private set; } = default!;
         public Guid PatronId { get; private set; } = default!;
         public bool IsAvailable { get; private set; } = default!;
 
         private BookCopy () { }
 
-        internal BookCopy (Book book, Guid id, Guid patronId) {
-            Book = book;
+        internal BookCopy (Guid id, Guid bookId, Guid patronId) {
             Id = id;
+            BookId = bookId;
             PatronId = patronId;
             IsAvailable = true;
         }
 
-        public void SetIsAvailable (bool available) {
+        internal bool SetAvailability (bool available) {
             if (IsAvailable == available) {
-                return;
+                return false;
             }
 
             IsAvailable = available;
-            Book.ChangeAvailableNumberOfCopies(IsAvailable ? 1 : -1);
             Version++;
+            return true;
         }
 
         public override object GetId () {

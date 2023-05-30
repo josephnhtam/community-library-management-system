@@ -22,17 +22,11 @@ namespace CLMS.Application.DomainEventHandlers {
                 loan.BookCopyId,
                 new(null, null, new List<Guid>() { loan.BookCopyId }));
 
-            var bookCopy = bookWithBookCopy?.Copies.FirstOrDefault(x => x.Id == loan.BookCopyId);
-
-            if (bookCopy == null) {
-                throw new BusinessRuleValidationException("Book copy not found");
+            if (bookWithBookCopy == null) {
+                throw new BusinessRuleValidationException("Book not found");
             }
 
-            if (bookCopy.IsAvailable) {
-                throw new BusinessRuleValidationException("Book copy is not borrowed");
-            }
-
-            bookCopy.SetIsAvailable(true);
+            bookWithBookCopy.SetBookCopyAvailability(loan.BookCopyId, true);
 
             await _unitOfWork.CommitAsync(cancellationToken);
         }

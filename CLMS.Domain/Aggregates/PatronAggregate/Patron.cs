@@ -11,6 +11,7 @@ namespace CLMS.Domain.Aggregates.PatronAggregate {
         public Guid Id { get; private set; } = default!;
         public PatronType Type { get; private set; } = default!;
         public string Name { get; private set; } = default!;
+        public string Description { get; private set; } = default!;
         public string PhoneNumber { get; private set; } = default!;
         public Address Address { get; private set; } = default!;
 
@@ -23,10 +24,11 @@ namespace CLMS.Domain.Aggregates.PatronAggregate {
 
         private Patron () { }
 
-        public Patron (PatronType type, string name, string phoneNumber, Address address) {
+        public Patron (PatronType type, string name, string description, string phoneNumber, Address address) {
             Id = Guid.NewGuid();
             Type = type;
             Name = name;
+            Description = description;
             PhoneNumber = phoneNumber;
             Address = address;
         }

@@ -26,6 +26,7 @@ namespace CLMS.Domain.Aggregates.PatronAggregate {
 
         internal void SetReturnDate (DateTimeOffset returnDate) {
             ReturnDate = returnDate;
+            Version++;
 
             AddDomainEvent(new BookCopyReturnedDomainEvent(this));
         }

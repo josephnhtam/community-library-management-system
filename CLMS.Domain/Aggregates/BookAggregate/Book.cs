@@ -1,4 +1,5 @@
 ﻿using Domain.Aggregates;
+using Domain.Exceptions;
 
 namespace CLMS.Domain.Aggregates.BookAggregate {
     public class Book : DomainEntity, IAggregateRoot {
@@ -24,11 +25,11 @@ namespace CLMS.Domain.Aggregates.BookAggregate {
             Title = title;
             Description = description;
             PublicationDate = publicationDate;
-            _authors = authors.Select(x => new BookAuthor(this, x)).ToList();
+            _authors = authors.Select(x => new BookAuthor(Id, x)).ToList();
         }
 
         public BookCopy AddCopy (Guid bookCopyId, Guid patronId) {
-            var bookCopy = new BookCopy(this, bookCopyId, patronId);
+            var bookCopy = new BookCopy(bookCopyId, Id, patronId);
             _copies.Add(bookCopy);
             TotalNumberOfCopies++;
             AvailableNumberOfCopies++;
@@ -36,9 +37,22 @@ namespace CLMS.Domain.Aggregates.BookAggregate {
             return bookCopy;
         }
 
-        internal void ChangeAvailableNumberOfCopies (int delta) {
-            AvailableNumberOfCopies += delta;
-            Version++;
+        public void SetBookCopyAvailability (Guid bookCopyId, bool available) {
+            var bookCopy = Copies.FirstOrDefault(x => x.Id == bookCopyId);
+
+            if (bookCopy == null) {
+                throw new BusinessRuleValidationException("Book copy not found");
+            }
+
+            if (bookCopy.SetAvailability(available)) {
+                if (available) {
+                    AvailableNumberOfCopies++;
+                } else {
+                    AvailableNumberOfCopies--;
+                }
+
+                Version++;
+            }
         }
 
         public override object GetId () {

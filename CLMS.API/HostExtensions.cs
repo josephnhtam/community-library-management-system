@@ -11,6 +11,7 @@ using CLMS.Domain.Aggregates.PatronAggregate;
 using MediatR;
 using System.Reflection;
 using CLMS.Application;
+using CLMS.Application.PipelineBehaviors;
 
 namespace CLMS.API {
     public static class HostExtensions {
@@ -31,6 +32,9 @@ namespace CLMS.API {
 
         private static WebApplicationBuilder AddMediatR (this WebApplicationBuilder builder) {
             builder.Services.AddMediatR(typeof(App).Assembly);
+
+            builder.Services
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(OptimisticUpdatePipelineBehavior<,>));
 
             return builder;
         }

@@ -1,36 +1,41 @@
-﻿using CLMS.API.DtoModels;
+﻿
+using AutoMapper;
+using CLMS.API.DtoModels.Books;
 using CLMS.Application.Commands.Books;
-using CLMS.Application.Queris.Books;
+using CLMS.Application.Queries.Books;
 using CLMS.Domain.Aggregates.BookAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CLMS.API.Controllers {
+namespace CLMS.API.Controllers
+{
     [ApiController, Route("api/v1/books")]
     public class BooksController : ControllerBase {
 
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public BooksController (IMediator mediator) {
+        public BooksController (IMediator mediator, IMapper mapper) {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Add (AddBookRequest request) {
-            var author = await _mediator.Send(
-                new AddBookCommand(
-                    request.Title,
-                    request.Description,
-                    request.PublicationDate,
-                    request.Authors));
-
-            return Ok(author.Id);
+        public async Task<ActionResult<Book>> Add (AddBookRequest request) {
+            var book = await _mediator.Send(_mapper.Map<AddBookCommand>(request));
+            return Ok(book);
         }
 
         [HttpGet]
         public async Task<ActionResult<Book>> Get (Guid bookId) {
-            var author = await _mediator.Send(new GetBookQuery(bookId));
-            return Ok(author);
+            var book = await _mediator.Send(new GetBookByIdQuery { BookId = bookId });
+            return Ok(book);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<Book>> GetByCopyId (Guid bookCopyId) {
+            var book = await _mediator.Send(new GetBookByCopyIdQuery { BookCopyId = bookCopyId });
+            return Ok(book);
         }
 
     }

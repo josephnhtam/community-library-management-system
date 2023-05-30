@@ -16,6 +16,8 @@ namespace CLMS.Infrastructure.EntityTypeConfigurations {
 
             builder.Property(x => x.Name).IsRequired();
 
+            builder.Property(x => x.Description).IsRequired();
+
             builder.Property(x => x.PhoneNumber).IsRequired();
 
             builder.Property(x => x.TotalBookDonationsCount).IsRequired();
